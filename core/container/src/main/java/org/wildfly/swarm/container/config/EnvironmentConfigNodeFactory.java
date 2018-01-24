@@ -15,6 +15,7 @@
  */
 package org.wildfly.swarm.container.config;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -50,15 +51,32 @@ public class EnvironmentConfigNodeFactory {
     }
 
     protected static void load(ConfigNode config, Map<String, String> input) {
-        Set<String> names = input.keySet();
+        Map<String, String> releaxed = adopt(input);
+        Set<String> names = releaxed.keySet();
 
         for (String name : names) {
             if (name.startsWith("swarm.")) {
-                String value = input.get(name);
+                String value = releaxed.get(name);
                 ConfigKey key = ConfigKey.parse(name);
                 config.recursiveChild(key, value);
             }
         }
+    }
+
+    /**
+     * Before adding environment variables adopt from env syntax - . is disallowed.
+     * We are changing from _ to . and ?? to -
+     * @param environment
+     * @return
+     */
+    private static Map<String, String> adopt(Map<String, String> environment) {
+        Map<String, String> releaxed = new HashMap<>();
+        environment.keySet().forEach(s -> releaxed.put(relax(s), environment.get(s)));
+        return releaxed;
+    }
+
+    private static String relax(String s) {
+        return s.replace('_', '.');
     }
 
 }

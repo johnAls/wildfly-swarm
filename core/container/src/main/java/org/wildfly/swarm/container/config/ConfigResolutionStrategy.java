@@ -78,20 +78,10 @@ class ConfigResolutionStrategy {
     }
 
     void withEnvironment(Map<String, String> environment) {
-        this.nodes.add(EnvironmentConfigNodeFactory.load(adopt(environment)));
+        this.nodes.add(EnvironmentConfigNodeFactory.load(environment));
     }
 
-    private Map<String, String> adopt(Map<String, String> environment) {
-        Map<String, String> releaxed = new HashMap<>();
-        environment.keySet().forEach(s -> releaxed.put(relax(s), environment.get(s)));
-        return releaxed;
-    }
-
-     private String relax(String s) {
-       return s.replace('_', '.');
-     }
-
-     /**
+    /**
      * Add a {@code ConfigNode} to the search list.
      *
      * @param node The node to add.
