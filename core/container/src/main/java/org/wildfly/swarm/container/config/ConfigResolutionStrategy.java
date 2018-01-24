@@ -16,6 +16,7 @@
 package org.wildfly.swarm.container.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -77,10 +78,22 @@ class ConfigResolutionStrategy {
     }
 
     void withEnvironment(Map<String, String> environment) {
-        this.nodes.add(EnvironmentConfigNodeFactory.load(environment));
+        this.nodes.add(EnvironmentConfigNodeFactory.load(adopt(environment)));
     }
 
-    /**
+    private Map<String, String> adopt(Map<String, String> environment) {
+        Map<String, String> releaxed = new HashMap<>();
+        environment.keySet().forEach(s -> releaxed.put(relax(s), environment.get(s)));
+        System.out.println("----------------------");
+        System.out.println(releaxed);
+        return releaxed;
+    }
+
+     private String relax(String s) {
+       return s.replace('_', '.');
+     }
+
+     /**
      * Add a {@code ConfigNode} to the search list.
      *
      * @param node The node to add.

@@ -92,7 +92,7 @@ public class ProjectStagesTest {
     @Test
     public void testEnvironmentVars() throws Exception {
         Map<String, String> environment = new HashMap<>();
-        environment.put("swarm.myname", "from_env");
+        environment.put("swarm_myname", "from_env");
         Swarm swarm = new Swarm(new Properties(), environment);
 
         ConfigView view = swarm.configView();
