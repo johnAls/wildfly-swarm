@@ -84,8 +84,6 @@ class ConfigResolutionStrategy {
     private Map<String, String> adopt(Map<String, String> environment) {
         Map<String, String> releaxed = new HashMap<>();
         environment.keySet().forEach(s -> releaxed.put(relax(s), environment.get(s)));
-        System.out.println("----------------------");
-        System.out.println(releaxed);
         return releaxed;
     }
 
