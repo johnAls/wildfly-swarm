@@ -56,4 +56,17 @@ public class EnvironmentConfigNodeFactoryTest {
         assertThat(node.valueOf(ConfigKey.of("swarm", "http", "port"))).isEqualTo("8080");
         assertThat(node.valueOf(ConfigKey.of("swarm", "data-sources", "ExampleDS", "url"))).isEqualTo("jdbc:db");
     }
+    
+    @Test
+    public void testLoadReleaxed() {
+        Map<String, String> env = new HashMap<String, String>() {{
+            put("swarm_name", "bob");
+            put("swarm_http_port", "8080");
+        }};
+
+        ConfigNode node = EnvironmentConfigNodeFactory.load(env);
+
+        assertThat(node.valueOf(ConfigKey.parse("swarm.name"))).isEqualTo("bob");
+        assertThat(node.valueOf(ConfigKey.of("swarm", "http", "port"))).isEqualTo("8080");
+    }
 }
