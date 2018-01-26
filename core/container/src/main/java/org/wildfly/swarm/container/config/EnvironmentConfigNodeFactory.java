@@ -65,8 +65,7 @@ public class EnvironmentConfigNodeFactory {
 
     /**
      * Before adding environment variables adopt from env syntax - . is disallowed.
-     * We are changing from _ to .
-     * -(dash) are still not changed
+     * We are changing from _ to . and Capital letter to -
      * @param environment
      * @return
      */
@@ -78,7 +77,14 @@ public class EnvironmentConfigNodeFactory {
 
     private static String relax(String s) {
         String result = s.replace('_', '.');
-        return result;
+        StringBuilder builder = new StringBuilder();
+        for (char ch : result.toCharArray()) {
+            if (Character.isUpperCase(ch)) {
+                builder.append('-');
+            }
+            builder.append(ch);
+        }
+        return builder.toString().toLowerCase();
     }
 
 }
