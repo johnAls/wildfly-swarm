@@ -302,6 +302,20 @@ public class RuntimeDeployer implements Deployer {
         }
     }
 
+    @Inject
+    void injectBeans(@Any Instance<DeploymentProcessor> deploymentProcessors) {
+       this.deploymentProcessors = order(deploymentProcessors);
+    }
+
+    private List<DeploymentProcessor> order(Instance<DeploymentProcessor> deploymentProcessors) {
+        List<DeploymentProcessor> list = new ArrayList<>();
+        deploymentProcessors.iterator().forEachRemaining(list::add);
+        Collections.sort(list, (DeploymentProcessor o1, DeploymentProcessor o2) ->
+          o1.getClass().getSimpleName()
+          .compareTo(o2.getClass().getSimpleName()));
+        return list;
+    }
+
     @SuppressWarnings("unused")
     @PreDestroy
     void stop() {
@@ -336,9 +350,7 @@ public class RuntimeDeployer implements Deployer {
     private boolean debug = false;
 
     @SuppressWarnings("unused")
-    @Inject
-    @Any
-    private Instance<DeploymentProcessor> deploymentProcessors;
+    private List<DeploymentProcessor> deploymentProcessors;
 
     private List<String> rarDeploymentNames = new ArrayList<>();
 
